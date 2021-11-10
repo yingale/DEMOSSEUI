@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<body>
+<style>
+    body {
+    background-color : #5e72e4!important;
+    }
+</style>
+<link rel="stylesheet" href="https://demos.creative-tim.com/argon-dashboard/assets/css/argon.min.css?v=1.2.0" type="text/css">
+<div class="header bg-primary pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4" style="text-align:center">
+                <div class="col-lg-12 col-7">
+                    <h6 class="h2 text-white d-inline-block mb-0">Website Visitors(Auto Refresh after every 2 sec.)</h6>
+
+                </div>
+
+            </div>
+            <!-- Card stats -->
+            <div class="row" style="width: 65%;float: right;">
+                <div class="col-lg-3">
+                    <div class="card card-stats">
+                        <!-- Card body -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">This Month Visitors</h5>
+                                    <span class="h2 font-weight-bold mb-0" id="thisMonth"></span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card card-stats">
+                        <!-- Card body -->
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col">
+                                    <h5 class="card-title text-uppercase text-muted mb-0">Last Month Visitors</h5>
+                                    <span class="h2 font-weight-bold mb-0" id="lastMonth"></span>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+var visitorId= getCookie('visitorid');
+if(visitorId =='') {
+    var uid = randomString();
+    document.cookie = "visitorid="+uid;
+    visitorId = uid;
+}
+
+UserAction();
+if (!!window.EventSource) {
+        var source = new EventSource('demo_sse.php');
+    } else {
+        // Result to xhr polling :(
+        console.log('start');
+    }
+
+    source.addEventListener('open', function(e) {
+        source.onmessage = function(event) {
+            var data = JSON.parse(event.data);
+            var d = new Date();
+            var thismonth = d.getMonth();
+            document.getElementById("thisMonth").innerHTML = data[thismonth+1] | 0;
+            document.getElementById("lastMonth").innerHTML = data[thismonth] | 0;
+          };
+    }, false);
+
+    source.addEventListener('error', function(e) {
+            //
+    }, false);
+
+function randomString() {
+    return Math.random().toString(36).substring(2, 15) +Math.random().toString(36).substring(2, 15) +Math.random().toString(36).substring(2, 15);
+}
+
+function UserAction() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+         if (this.readyState == 4 && this.status == 200) {
+             //console.log(this.responseText);
+         }
+    };
+    xhttp.open("GET", "http://localhost:3000/visitors?uuid="+visitorId, true);
+    xhttp.setRequestHeader("Content-type", "application/json");
+    xhttp.send("Your JSON Data Here");
+}
+
+
+function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+</script>
+
+</body>
+</html>
