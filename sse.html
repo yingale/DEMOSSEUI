@@ -53,6 +53,7 @@
     </div>
 </div>
 <script>
+var appPath = "http://localhost:3000";    
 var visitorId= getCookie('visitorid');
 if(visitorId =='') {
     var uid = randomString();
@@ -93,7 +94,7 @@ function UserAction() {
              //console.log(this.responseText);
          }
     };
-    xhttp.open("GET", "http://localhost:3000/visitors?uuid="+visitorId, true);
+    xhttp.open("GET", appPath+"/visitors?uuid="+visitorId, true);
     xhttp.setRequestHeader("Content-type", "application/json");
     xhttp.send("Your JSON Data Here");
 }
