@@ -4,9 +4,9 @@
 
 **pre-requisite**
 
-1. PHP
-2. MYSql
+  PHP, Mysql
 
+**Steps**
 1. Clone this repository
 
 2. **Execute visitor.sql**
